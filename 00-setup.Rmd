@@ -4,5 +4,8 @@
 
 2. Download RStudio: https://rstudio.com/products/rstudio/download/#download. Again, pick your operating system and click the corresponding file (e.g. for Windows `RStudio-1.2.5033.exe`, for macOS ` RStudio-1.2.5033.dmg`). Install this like you would any other program on your computer.
 
-3. 
+3. Download this repository as a `.zip` file: https://gitlab.com/VickySteeves/Repro-R/-/archive/main/Repro-R-main.zip. Unzip it on your Desktop (or somewhere that you can find easily).
 
+4. Open the `Repro-R.proj` file in the unzipped directory (which should be `Repro-R/`).
+
+5. Run `bookdown::render_book('index.Rmd', 'all')` in the Console in RStudio (bottom left pane). Let it run to completion. You may have to enter `Y` and press enter at some point when `renv` is installing (if it's the first time you are using `renv`). This may take a while at first because we are installing quite a few packages for our analysis work.
