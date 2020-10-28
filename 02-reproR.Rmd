@@ -31,7 +31,7 @@ Ok, so now that we have our great project space, we can organize it off the jump
 
 Instead of making these scripts with the big ole `New Folder` button on the bottom-right pane, let's make it with some R code:
 
-```{r create_folders, eval=FALSE}
+```{r create_folders, results='hide'}
 dir.create("data")
 dir.create("results")
 dir.create("src")
@@ -41,7 +41,7 @@ You should see those three folders ready to go for our research example we're ab
 
 ## Example {-}
 
-```{r install_renv, eval=FALSE}
+```{r install_renv, results='hide'}
 if(!requireNamespace("renv"))
   install.packages("renv", repos = "https://cloud.r-project.org")
 library("renv")
@@ -65,19 +65,20 @@ It's also great for collaborating. You can send people your `renv.lock` lockfile
 
 And so on and so on as much! You may at some point need to call `renv::restore()` to revert to the previous state if updated packages break your code, which is sadly very likely to happen. **Let's initialize `renv` for this project now**. 
 
-```{r renv_init, eval=FALSE}
-renv::init(force=TRUE, restart = FALSE, prompt = FALSE)
+```{r renv_init, results='hide'}
+renv::init(force=TRUE, restart = FALSE)
 ```
 
 You may need to enter "Y" in the Console on the bottom left pane of RStudio if this is your first time using `renv`. Ok, now that we have `renv` initialized for our project, let's get to work visualizing my survey data. We'll be downloading a CSV off the Internet and writing it to our `data` folder, since this will be raw data we transform, as well as another RMarkdown document that does some processing on this raw data and saving that to our `src` folder:
 
-```{r download_deps, eval=FALSE}
+```{r download_deps, results='hide'}
 # download raw data
 download.file("https://osf.io/8vswu/download",
               "data/survey.csv", mode = "wb")
 
 # download data processing script
-download.file("https://gitlab.com/investigating-archiving-git/survey-analysis/-/raw/master/00-prep-data.Rmd?inline=false", "src/processing.Rmd", mode = "wb")
+download.file(
+  "https://gitlab.com/investigating-archiving-git/survey-analysis/-/raw/master/00-prep-data.Rmd?inline=false",  "src/processing.Rmd", mode = "wb")
 
 # convert RMarkdown to RScript
 knitr::purl("src/processing.Rmd", output = 'src/processing.R')
@@ -85,13 +86,13 @@ knitr::purl("src/processing.Rmd", output = 'src/processing.R')
 
 Now that we have our raw data and our processing script downloaded off the Net and into their rightful folders, let's call that data processing script from our RMarkdown document so we can start plotting: 
 
-```{r process_data, eval=FALSE}
-source("src/processing.R")
+```{r process_data, results='hide'}
+source("src/processing.R", local = knitr::knit_global())
 ```
 
 We'll also need to install ggplot2 to make our nice visualizations now that our processing script has cleaned the data for us:
 
-```{r install_ggplot2, eval=FALSE}
+```{r install_ggplot2, results='hide'}
 if(!requireNamespace("ggplot2"))
   install.packages("ggplot2", repos = "https://cloud.r-project.org")
 library("ggplot2")
