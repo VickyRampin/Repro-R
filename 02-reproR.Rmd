@@ -66,6 +66,7 @@ It's also great for collaborating. You can send people your `renv.lock` lockfile
 And so on and so on as much! You may at some point need to call `renv::restore()` to revert to the previous state if updated packages break your code, which is sadly very likely to happen. **Let's initialize `renv` for this project now**. 
 
 ```{r renv_init, results='hide'}
+renv::consent(provided = TRUE)
 renv::init(force=TRUE, restart = FALSE)
 ```
 
@@ -87,6 +88,7 @@ knitr::purl("src/processing.Rmd", output = 'src/processing.R')
 Now that we have our raw data and our processing script downloaded off the Net and into their rightful folders, let's call that data processing script from our RMarkdown document so we can start plotting: 
 
 ```{r process_data, results='hide'}
+source("src/processing.R", local = knitr::knit_global())
 source("src/processing.R", local = knitr::knit_global())
 ```
 
