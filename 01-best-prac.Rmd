@@ -139,13 +139,11 @@ Some of the most common file format transformations I recommend are:
 
 ## Reproducibility {-}
 
-Like I said, about 80-90% of reproducibility is adhering to best practices of RDM. Let's move over to talk about the best practice for reproducibility in particular for that last 20%!
-
 >  Managing your projects in a reproducible fashion doesn't just make your science reproducible, it makes your life easier. — Vince Buffalo (@vsbuffalo) [April 15, 2013](https://twitter.com/vsbuffalo/status/323638476153167872) 
 
-While reproducibility has always been a part of the scientific method, research reproducibilty generally was first stressed in Western literature in the 17th century by the Irish chemist, Robert Boyle. Before research computing, reproducibility generally meant one researcher travelling to anothers' lab or workspace to try to re-do their work. Since the widespread use of born-digital research materials, pipelines, and processes, the ability to re-do others' work is just as arduous as trekking across a sea or continent. If you have ever tried to get something to work on Windows that originally worked on Mac, you might understand why that is.
+Like I said, about 80-90% of reproducibility is adhering to best practices of RDM. Let's move over to talk about the best practice for reproducibility in particular for that last 20%! Before research computing, reproducibility generally meant one researcher traveling to anothers' lab or workplace to try to re-do their work. Since the widespread use of born-digital research materials, pipelines, and processes, the ability to re-do others' work is just as hard. If you have ever tried to get something to work on Windows that originally worked on macOS, you might understand why that is.
 
-While these definitions vary across disciplines, for this lecture I am using the terms reproducibility and replication like so:
+While these definitions vary across disciplines, for this session I am using the terms reproducibility and replication like so:
 
 **Reproducibility**: independent people use the same code and data to verify a claim
 
@@ -159,13 +157,11 @@ However, as with all things, reproducibility should be defined on a spectrum. Th
 > Auditable Research: Process & tools archived such that it can be defended later if necessary. <br/>
 > **Open/Reproducible Research: Auditable research made openly available** <br/>
 
-These can be mapped onto a pyramid, like so:
+This spectrum definition also harkens back to one of the other most said quotes about reproducibility, which I think is important to think about going back to the idea of thinking of data managemnt holistically to cover everything needed to validate your work:
 
-![My idea, made aesthetically pleasing by Andrew Rarig (NYU)](imgs/repro-pyramid.png)
+> An article about computational results is advertising, not scholarship. The actual scholarship is the full software environment, code and data, that produced the result. -- Johnathan Buckheit and David Donoho, Stanford University
 
-The idea is that we need the whole pyramid for research reproducibility. So the goal becomes to capture the whole pyramid -- the code, data, documentation, narrative, and the computational environment. Natural scientists back in the day used to spend a lot of time documenting, with paintings and illustrations, the ecological environment in which they were doing their research. Researchers *today* use those descriptions to juxtapose the current landscape to the historical one, to draw conclusions about the changing world. Most of the time, researchers can return to these landscapes. However, this becomes much harder with computational environments -- operating systems with their various configurations.
-
-We call this **computational reproducibility**. With so much research today being completely born-digital, it's just as important to capture these computational environments for posterity -- to be able to return to, access, and reproduce the research being done today.
+I also think these definitions can therefore be mapped onto some real-world examples like so:
 
 | ICERM Report Definitions                                                                       | Potential Real-World Examples                                                                                                  |
 |:-----------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------|
@@ -175,14 +171,19 @@ We call this **computational reproducibility**. With so much research today bein
 | Auditable Research: Process & tools archived such that it can be defended later if necessary   | The tools, environment, data, and code are put into a preservation-ready format                                                |
 | Open/Reproducible Research: Auditable research made openly available                           | Everything above is made available in a repository for others to examine and use                                               |
 
+I also like to think of the requrements to get to open and reproducible research as this pyramid of things to manage:
+
+![My idea, made aesthetically pleasing by Andrew Rarig (NYU)](imgs/repro-pyramid.png)
+
+The idea is that we need the whole pyramid for research reproducibility. So the goal becomes to capture the whole pyramid -- the code, data, documentation, narrative, and the computational environment (like operating systems and programming language dependencies with their various configurations). We can do this with RMarkdown and a few R packages, which we'll see in the hands-on.  We call the idea of making this process reproducible **computational reproducibility**. 
+
 But first --  **why do we care about reproducibility?**
 
 There are many reasons to support reproducibility in research, including:
 
 + **Build on top of previous work** – after all, research is incremental and we always rely and base ourselves in methods and techniques developed in the past.
     - Y’know. That Sir Isaac Newton quote in every reproducibility presentation ever: "If I have seen further, it is by standing on the shoulders of giants."
-+ **Help newcomers** – new students who want to learn the field, post-docs who might need to carry on a project.
-    - Your reproducible work is their greatest teacher!
++ **Help newcomers** learn methods and norms of the field through reproducing others' work.
     - It's always a struggle to make things work when there's not enough detail or the right code/data to keep a project going. 
 + **Defeat self-deception**, which is in line with verifying the correctness of results.
     - This is not a matter of researchers not trusting each other -- the issue is that even an honest person is a master of self-deception. Often, we are trying to find reasonable and acceptable outcomes to meet a certain deadline.
@@ -192,7 +193,7 @@ There are many reasons to support reproducibility in research, including:
 
 **Ok, so we care about reproducibility. It's so hard, though!**
 
-Yes, achieving that 100% reproducibility mark is very hard (and some say impossible). This is in part due to three major challenges:
+Yes, achieving that 100% reproducibility mark is hard. This is in part due to 3 major challenges:
 
 1. **Workload & Time Challenges**: it is a time commitment to get data and code ready to share, and to share it 
     + the *Incentive Problem*: reproducibility takes time, and is not always valued by the academic reward structure
@@ -206,27 +207,7 @@ Yes, achieving that 100% reproducibility mark is very hard (and some say impossi
 
 > "It would require huge amount of effort to make our code work with the latest versions of these tools." -- Collberg et al., Repeatability and Benefaction in Computer Systems Research, University of Arizona TR 14-04
 
-3. **Normative Dissonance**: espoused values do not always match behavior, for a number of reasons.
-
-> "Scientists' views of their fields as cooperative or competitive were associated with their normative perspectives, with competitive fields showing more counternormative behavior." -- Melissa S. Anderson, Brian C. Martinson, and Raymond De Vries, "[Normative Dissonance in Science: Results from a National Survey of U.s. Scientists](https://www.ncbi.nlm.nih.gov/pubmed/19385804)"
-
-**Some workflow-related barriers to reproducibility**
-
-We talked in week 4 about the importance of using open file formats and tools for data management and reproducibility, so I won't rehash that here, but the file format/tool problem in research (the problem being, too many tools and formats are closed and proprietary and expensive) *is* a high barrier to reproducible research. So keep it in the back of your head! You probably noticed that the Dekker & Lackie article was largely going over best practices in data management...  
-
-I want to highlight something related to workflows & reproducibility: the idea that clicking is not reproducible but learning to program is a high barrier. Dekker & Lackie highlight this in their <span style="text-decoration:underline;">Databrarianship</span> chapter: "Novice researchers rarely have a chance to systematically learn about the essentials [...] before they are faced with applying the necessary principles in their own research". And it often is -- where in methodology sections do you see things like "played with settings in Adobe until my figure was exactly the way I want it" or "clicked into seven sub-menus in SPSS to get to this one specific feature essential for my stats". 
-
-The [Yenni et. al. article](https://www.biorxiv.org/content/early/2018/07/24/344804) from last week (it was optional) highlights these reasons for automating their workflow:
-
-> We do this by leveraging existing tools to: 1) perform quality assurance and control; 2) import, restructure, version, and archive data; 3) rapidly publish new data in ways that ensure appropriate credit to all contributors; and 4) automate most steps in the data pipeline to reduce the time and effort required by researchers. The workflow uses two tools from software development, version control and continuous integration, to create a modern data management system that automates the pipeline.
-
-While the authors discuss efficiency, the automation of their workflow (and thus, the reduction of click around...) is a really important step in the pursuit of reproducibility. Human error is greatly reduced (it's hard to keep track of you click in the heat of the moment, and even harder to remember after the fact), and reporting out is a lot simpler -- one markdown file, one jupyter notebook, instead of a laundry list of menus to click!
-
-**Computational reproducibility**
-
-> An article about computational results is advertising, not scholarship. The actual scholarship is the full software environment, code and data, that produced the result. -- Johnathan Buckheit and David Donoho, Stanford University
-
-I always posit that good research data management enables reproducibility but does not *guarantee* it. Open file formats, good documentation, using open tools, and backing up your data is amazing and necessary, but even that isn't enough to ensure that I can rerun your work. That's computational reproducibility is about. What works on my Linux machine should give the same results when run on your macOS laptop. This phenomenon has been explored in publications such as: 
+Like I mentioned before, good research data management practices enables reproducibility but does not *guarantee* it. Open file formats, good documentation, using open tools, and backing up your data is amazing and necessary, but even that isn't enough to ensure that I can rerun your work. That's computational reproducibility is about. What works on my Linux machine should give the same results when run on your macOS laptop. This phenomenon has been explored in publications such as: 
 
 [**The Effects of FreeSurfer Version, Workstation Type, and Macintosh Operating System Version on Anatomical Volume and Cortical Thickness Measurements**](https://dx.doi.org/10.1371/journal.pone.0038234)
 
@@ -235,7 +216,6 @@ I always posit that good research data management enables reproducibility but do
 **The challenge: environments are hard to capture**
 
 ![](imgs/dependecy-hell.png)
-
 **Gap**: tools that can automatically capture all the dependencies in the original environment in a research compendium and automatically set them up in another environment. There are a few tools that try to address this gap in slightly different ways:
 
 *Containers*: lightweight virtual operating systems you can send around to other people.
@@ -246,12 +226,6 @@ I always posit that good research data management enables reproducibility but do
 + [Docker](https://docker.com)
     - Docker was made to "pack, ship and run any application as a lightweight container." -- idea is to provide a comprehensive abstraction layer that allows developers to "containerize" or "package" any application and have it run on any infrastructure (doesn't really work on HPC though...).
 
-The research community has been increasingly using and sharing containers (especially Docker) to try to mitigate this problem. However there are a few problems with containers:
-
-+ No idea of provenance. If I got a container and some code/data, I'd still need to know what to run first, which data is input/output, etc. 
-+ Not trivial for new users to make *or* to use; they have a steep learning curve.
-+ Not sustainable; I can only use a Dockerfile with Docker, and it's not always backwards compatible. This is a big problem thinking long-term.
-
 *Packaging Systems*: auto-capture of dependencies & source code used at time of running.
 
 + [ReproZip](https://reprozip.org) (I work on this!)
@@ -259,17 +233,14 @@ The research community has been increasingly using and sharing containers (espec
 
 + [o2r](https://o2r.info)
     - Give them a R workspace with an RMarkdown file, get a re-runnable paper in-browser. Uses docker to do this in the backend.
+    
+**R-specific packages**: R packages made to facilitate sharing of computationally reproducible research
 
-A few systems like Yale University Library’s [Emulation as a Service](http://guides.library.yale.edu/digitalpreservation/services) or Carnegie Mellon University's [Olive Archive](https://olivearchive.org/) offer legacy base operating system access to users that could in time start to address computational reproducibility as analysis software is added to their collections, or they integrate with existing tools like [Whole Tale]() or [ReproZip](https://reprozip.org).
++ [renv](https://rstudio.github.io/renv/): `renv` is an R package to create portable, reproducible environments for R projects.
 
-This recent report discusses fair use in regards to software preservation (helpful for capturing proprietary environments for the scholarly record **and** sets us up for the licensing talk next week!): https://www.softwarepreservationnetwork.org/bp-fair-use/
++ [rrtools](https://www.rdocumentation.org/packages/rrtools/versions/0.1.0): more of a data management package, `rrtools` provides instructions, templates, and functions for writing a reproducible journal article.
 
-The goal is: at the end of a project, take all the great data and project management skills and make what's called a *research compendium* or a *reproducible package* of all your work! This is a package that contains all of the things necessary to reproduce your work, taking even the computational environment into account. 
-
-> "Research compendia are an increasingly used form of publication, which packages not only the research paper's text and figures, but also all data and software for better reproducibility." - Nuest, Bottinger, & Marwick, [How to read a research compendium](https://arxiv.org/abs/1806.09525)
-
-ReproZip, the tool I work on, was made in order to facilitate the creation of these self-contained, distributable bundles of pipelines! I thought I'd give a demo on packing and unpacking work with ReproZip to give you a better idea of how the workflow and resulting file might look like. Let's do that now! I'm using our demo virtual machine and example use cases from: https://examples.reprozip.org.
-
+The goal is: at the end of a project, take all the great data and project management skills and make what's called a *research compendium* or a *reproducible package* of all your work! This is a package that contains all of the things necessary to reproduce your work, taking even the computational environment into account. We'll be doing that with RMarkdown and `renv` next.
 
 ## Recap {-}
 
