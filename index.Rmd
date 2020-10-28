@@ -20,7 +20,7 @@ output:
           <p><a href="https://gitlab.com/RLesur/bookdown-gitlab-pages" target="blank">Published with bookdown &amp; GitLab</a></p>
           <p>Original content licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA</a>.</p>
           <p>Any questions, contact: <a href="mailto:vicky.steeves@nyu.edu">vicky.steeves@nyu.edu</a></p>
-      edit: https://gitlab.com/VickySteeves/Repro-R/edit/master/%s
+      edit: https://gitlab.com/VickySteeves/Repro-R/edit/main/%s
       search: yes
       download: ["pdf", "epub"]
       sharing: null
