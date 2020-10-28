@@ -99,6 +99,7 @@ If folks don't try to put all the metadata in the their file name, they *definit
 It's useful then to keep a standard way of organizing your projects alongside your file naming conventions, to help us avoid falling down the nested folder rabbit hole. This way of organizing projects I've found is one of the most helpful across different domains of research:
 
 ![](imgs/folder.png)
+
 + Put each `project` in its own directory, which is named after the project and perhaps prepended with that `YYYY-MM-DD` of when the project started.
 + Put text documents and relevant supplementary documentation associated with the project in the `docs` folder.
 + Put raw data and metadata in the `data` folder (which should be **ready-only**, do not change your raw data directly!)
@@ -216,6 +217,7 @@ Like I mentioned before, good research data management practices enables reprodu
 **The challenge: environments are hard to capture**
 
 ![](imgs/dependecy-hell.png)
+
 **Gap**: tools that can automatically capture all the dependencies in the original environment in a research compendium and automatically set them up in another environment. There are a few tools that try to address this gap in slightly different ways:
 
 *Containers*: lightweight virtual operating systems you can send around to other people.
@@ -234,7 +236,7 @@ Like I mentioned before, good research data management practices enables reprodu
 + [o2r](https://o2r.info)
     - Give them a R workspace with an RMarkdown file, get a re-runnable paper in-browser. Uses docker to do this in the backend.
     
-**R-specific packages**: R packages made to facilitate sharing of computationally reproducible research
+*R-specific packages*: R packages made to facilitate sharing of computationally reproducible research
 
 + [renv](https://rstudio.github.io/renv/): `renv` is an R package to create portable, reproducible environments for R projects.
 
