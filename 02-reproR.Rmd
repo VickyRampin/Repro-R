@@ -39,7 +39,7 @@ dir.create("src")
 
 You should see those three folders ready to go for our research example we're about to do! 
 
-## Example {-}
+## Example Code {-}
 
 ```{r install_renv, results='hide'}
 if(!requireNamespace("renv"))
@@ -98,7 +98,7 @@ if(!requireNamespace("ggplot2"))
 library("ggplot2")
 ```
 
-The following figures were generated as a part of a submission to HICSS 2020 conference. We're going to try to run this code, and see if we can get all the dependencies with `renv`!
+The following code generates figures as a part of a submission to HICSS 2020 conference. We're going to try to run this code, and see if we can get all the dependencies with `renv`!
 
 ```{r read_hicss_data}
 hicss_output <- read.csv(file = "results/processed-survey.csv")
@@ -168,7 +168,6 @@ And save the plot:
 ```{r save_plot_why_how_learn}
 ggsave("results/2020-hicss_figure01.png", dpi = 300)
 ```
-
 
 ### Figure 2 {-}
 
@@ -285,10 +284,26 @@ We'll snapshot at the end as well to make sure any last dependencies are picked 
 renv::snapshot(prompt = FALSE)
 ```
 
+And that's it! Now if you send each other your R Projects with all the files and the `renv` lockfile, they will be able to reproduce your work :) Let's try that in small groups now!
 
-And that's it! Now if you send each other your R Projects with all the files and the `renv` lockfile, they will be able to reproduce your work :)
+### Swapping Work
 
-## How-To's {-}
+I will put you into breakout groups where **one** person should share their project files, including their `renv.lock` file. You can zip it up and send it via email even, if that's easiest.
+
+Every other person should download their project, unzip it, and double click the .Rproj file in the directory. From there, in the Console (bottom left) type in `renv::restore()` and hit enter. You should be seeing their specific dependencies install for their specific project, because remember that one of the reasons we like `renv` is that it is isolated per-project.
+
+## Summary {-}
+
+Use `renv` to share your specific computational dependencies with collaborators to ensure reproducibility by:
+
+* Working in R Projects
+* Using `renv::init()` to tell `renv` to pay attention to the project you are in
+* Calling `renv::snapshot()` every so often to make sure you are 
+* Making sure wherever you are sending the `renv.lock` file along with your R Project and other files
+
+And if you receive a `renv.lock` file from a collaborator, you can get to their dependencies by running `renv::retore()` to make sure everyone has the same starting computational dependencies loaded per project.
+
+## renv Links {-}
 
 * Introduction to renv: https://rstudio.github.io/renv/articles/renv.html
 * renv: Project Environments for R: https://blog.rstudio.com/2019/11/06/renv-project-environments-for-r/
