@@ -1,4 +1,4 @@
-# Reproducibility with R
+# Reproducibility with R {-}
 
 Ok I am a big fan of using R and RMarkdown in my research toolkit, so I am really particularly psyched to be teaching, for the first time ever, a new R package for reproducibility: `renv`. But before we get into those computational reproducibility workflows, let's first set up our R environment to be conducive to data management and reproducibility.
 
@@ -31,7 +31,7 @@ Ok, so now that we have our great project space, we can organize it off the jump
 
 Instead of making these scripts with the big ole `New Folder` button on the bottom-right pane, let's make it with some R code:
 
-```{r create_folders}
+```{r create_folders, eval=FALSE}
 dir.create("data")
 dir.create("results")
 dir.create("src")
@@ -39,9 +39,9 @@ dir.create("src")
 
 You should see those three folders ready to go for our research example we're about to do! 
 
-## Example
+## Example {-}
 
-```{r install_renv}
+```{r install_renv, eval=FALSE}
 if(!requireNamespace("renv"))
   install.packages("renv", repos = "https://cloud.r-project.org")
 library("renv")
@@ -63,16 +63,15 @@ It's also great for collaborating. You can send people your `renv.lock` lockfile
 4. Work in the project as normal, installing and removing new R packages as needed
 5. Call `renv::snapshot()` again to save the state of your project library if you updated your R packages successfully
 
-And so on and so on as much! You may at some point need to call `renv::restore()` to revert to the previous state if updated packages break your code, which is sadly very likely to happen. Let's initialize `renv` for this project now:
+And so on and so on as much! You may at some point need to call `renv::restore()` to revert to the previous state if updated packages break your code, which is sadly very likely to happen. **Let's initialize `renv` for this project now**. 
 
-```{r init_renv}
-renv::init(force = TRUE)
-options(renv.consent = TRUE)
+```{r renv_init, eval=FALSE}
+renv::init(force=TRUE, restart = FALSE, prompt = FALSE)
 ```
 
-You will need to enter "Y" in the Console on the bottom left pane of RStudio if this is your first time using `renv`. Ok, now that we have `renv` initialized for our project, let's get to work visualizing my survey data. We'll be downloading a CSV off the Internet and writing it to our `data` folder, since this will be raw data we transform, as well as another RMarkdown document that does some processing on this raw data and saving that to our `src` folder:
+You may need to enter "Y" in the Console on the bottom left pane of RStudio if this is your first time using `renv`. Ok, now that we have `renv` initialized for our project, let's get to work visualizing my survey data. We'll be downloading a CSV off the Internet and writing it to our `data` folder, since this will be raw data we transform, as well as another RMarkdown document that does some processing on this raw data and saving that to our `src` folder:
 
-```{r download_deps}
+```{r download_deps, eval=FALSE}
 # download raw data
 download.file("https://osf.io/8vswu/download",
               "data/survey.csv", mode = "wb")
@@ -86,25 +85,19 @@ knitr::purl("src/processing.Rmd", output = 'src/processing.R')
 
 Now that we have our raw data and our processing script downloaded off the Net and into their rightful folders, let's call that data processing script from our RMarkdown document so we can start plotting: 
 
-```{r process_data}
+```{r process_data, eval=FALSE}
 source("src/processing.R")
 ```
 
 We'll also need to install ggplot2 to make our nice visualizations now that our processing script has cleaned the data for us:
 
-```{r install_ggplot2}
+```{r install_ggplot2, eval=FALSE}
 if(!requireNamespace("ggplot2"))
   install.packages("ggplot2", repos = "https://cloud.r-project.org")
 library("ggplot2")
 ```
 
-Let's snapshot that, because probably a lot of packages were installed just then between `ggplot2` here and what's in our processing script:
-
-```{r snapshot01}
-renv::snapshot()
-```
-
-The following figures were generated as a part of a submission to HICSS 2020 conference. We're going to try to run this code, and
+The following figures were generated as a part of a submission to HICSS 2020 conference. We're going to try to run this code, and see if we can get all the dependencies with `renv`!
 
 ```{r read_hicss_data}
 hicss_output <- read.csv(file = "results/processed-survey.csv")
@@ -284,13 +277,17 @@ And save the plot:
 ```{r save_plot_schol_ghps}
 ggsave("results/2020-hicss_figure03.png", dpi = 300)
 ```
-And we'll snapshot at the end as well to make sure any last dependencies are picked up by `renv`: 
 
-```{r snapshot02}
-renv::snapshot()
+We'll snapshot at the end as well to make sure any last dependencies are picked up by `renv` before we stop making plots for this paper by typing the following into the Console and hitting enter: ``. 
+
+```{r}
+renv::snapshot(prompt = FALSE)
 ```
 
-## Further Reading
+
+And that's it! Now if you send each other your R Projects with all the files and the `renv` lockfile, they will be able to reproduce your work :)
+
+## How-To's {-}
 
 * Introduction to renv: https://rstudio.github.io/renv/articles/renv.html
 * renv: Project Environments for R: https://blog.rstudio.com/2019/11/06/renv-project-environments-for-r/
