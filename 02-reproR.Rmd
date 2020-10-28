@@ -1,0 +1,296 @@
+# Reproducibility with R
+
+Ok I am a big fan of using R and RMarkdown in my research toolkit, so I am really particularly psyched to be teaching, for the first time ever, a new R package for reproducibility: `renv`. But before we get into those computational reproducibility workflows, let's first set up our R environment to be conducive to data management and reproducibility.
+
+You should as a rule use `R Projects` every time you use R and RStudio for your work. By creating a `Project`, you create a working directory for you but also remembers its location (allowing you to quickly navigate to it). It’s really nice for sending to others, too.
+
+The first thing we are going to do is create a new Project. It is good practice to keep a set of related data, analyses, and text self-contained in a single folder called the **working directory**. We’ll refer to files from that location, rather than having the type out the whole location as it is on our computer – in practice, that looks like typing out `/data/raw-data.csv` instead of `/home/vicky/Downloads/Repro-R/data/raw-data.csv`. Working this way makes it a lot easier to move your project around on your computer and share it with others without having to directly modify file paths in the individual scripts too.
+
+So let's all right now create a new project:
+
+1. Under the `File` menu, click on `New project`, choose `New directory`, then `New project`
+2. Enter a name for this new folder (or "directory") and choose a convenient location for it. This will be your working directory for the rest of the session.
+3. Click `Create project` and give it a name
+
+We want to make sure that the working directory we just set up works on everyone's machine, and isn't reliant on hard-coded paths that break easily, like `"/home/vicky/Downloads/Repro-R/data/survey.csv"`, which will break immediately if, for instance, your computer starts at `C:` or your username isn't `vicky`. We can get around that problem by invoking the nifty R package, `here`.
+
+```{r install_here}
+if(!requireNamespace("here"))
+  install.packages("here", repos = "https://cloud.r-project.org")
+library("here")
+```
+
+So calling the `here()` function starts relative to the folder structure on my own machine. This means, when using it on your machine, it starts relative to the folder structure on your own machine. This allows us to access and query all directories relative to the top directory of the project folder and have it work on everyone's machines. 
+
+Ok, so now that we have our great project space, we can organize it off the jump according to the best practices we saw last hour:
+
+* `data/` Use this folder to store your raw data, which is **read only**. Do not directly modify this data!
+* `results/` When you need to modify your raw data, put the derivatives here.
+* `docs/` Used for outlines, article drafts, codebooks, and other text. Ours will be empty for this class so I'm not having you make one, but you can adapt the code below to add one for future projects.
+* `src/` A place to keep your R scripts for different analyses or plotting.
+
+Instead of making these scripts with the big ole `New Folder` button on the bottom-right pane, let's make it with some R code:
+
+```{r create_folders}
+dir.create("data")
+dir.create("results")
+dir.create("src")
+```
+
+You should see those three folders ready to go for our research example we're about to do! 
+
+## Example
+
+```{r install_renv}
+if(!requireNamespace("renv"))
+  install.packages("renv", repos = "https://cloud.r-project.org")
+library("renv")
+```
+
+Since you all will be working in R this semester, I am not going to do an R tutorial, but rather show you my real R code and my real RMarkdown work, and how I've made it computationally reproducible with `[renv](https://rstudio.github.io/renv/)`. `renv` is a package that lets you have dependency management at the project level for R. `renv` was also meant to superceded `Packrat`, the package I had been teaching in this class previously, with the promise of fewer surprises and better default behaviors. I like `renv` because it's:
+
++ *Isolated*: Each project gets its own library of R packages, so you can feel free to upgrade and change package versions in one project without worrying about breaking your other projects.
++ *Portable*: Because `renv` writes your dependency information to the `lockfile`, you can easily share and collaborate on projects with others, and ensure that everyone is working from the same environment.
++ *Reproducible*: It is keeping track of your dependencies and project states, and lets you snapshot and restore them at will.
+
+It's also great for collaborating. You can send people your `renv.lock` lockfile and they can execute `renv::restore()` to automatically install the same versions of the packages you used, as transcribed lockfile, into their own private project. That way you are all working from a common base!
+
+`renv` was made to keep your workflow intact by only managing and isolating your project's R dependencies. All the tools that you were using before will not break by using it.  The [general workflow](https://rstudio.github.io/renv/articles/renv.html) when working with `renv` is such:
+
+1. Call `renv::init()` to initialize a new project-level private R library
+2. Work in the project as normal, installing and removing new R packages as needed
+3. Call `renv::snapshot()` to save the state of the project library to the lockfile (called `renv.lock`)
+4. Work in the project as normal, installing and removing new R packages as needed
+5. Call `renv::snapshot()` again to save the state of your project library if you updated your R packages successfully
+
+And so on and so on as much! You may at some point need to call `renv::restore()` to revert to the previous state if updated packages break your code, which is sadly very likely to happen. Let's initialize `renv` for this project now:
+
+```{r init_renv}
+renv::init(force = TRUE)
+options(renv.consent = TRUE)
+```
+
+You will need to enter "Y" in the Console on the bottom left pane of RStudio if this is your first time using `renv`. Ok, now that we have `renv` initialized for our project, let's get to work visualizing my survey data. We'll be downloading a CSV off the Internet and writing it to our `data` folder, since this will be raw data we transform, as well as another RMarkdown document that does some processing on this raw data and saving that to our `src` folder:
+
+```{r download_deps}
+# download raw data
+download.file("https://osf.io/8vswu/download",
+              "data/survey.csv", mode = "wb")
+
+# download data processing script
+download.file("https://gitlab.com/investigating-archiving-git/survey-analysis/-/raw/master/00-prep-data.Rmd?inline=false", "src/processing.Rmd", mode = "wb")
+
+# convert RMarkdown to RScript
+knitr::purl("src/processing.Rmd", output = 'src/processing.R')
+```
+
+Now that we have our raw data and our processing script downloaded off the Net and into their rightful folders, let's call that data processing script from our RMarkdown document so we can start plotting: 
+
+```{r process_data}
+source("src/processing.R")
+```
+
+We'll also need to install ggplot2 to make our nice visualizations now that our processing script has cleaned the data for us:
+
+```{r install_ggplot2}
+if(!requireNamespace("ggplot2"))
+  install.packages("ggplot2", repos = "https://cloud.r-project.org")
+library("ggplot2")
+```
+
+Let's snapshot that, because probably a lot of packages were installed just then between `ggplot2` here and what's in our processing script:
+
+```{r snapshot01}
+renv::snapshot()
+```
+
+The following figures were generated as a part of a submission to HICSS 2020 conference. We're going to try to run this code, and
+
+```{r read_hicss_data}
+hicss_output <- read.csv(file = "results/processed-survey.csv")
+
+# there is a column for the participant #, which we can remove
+hicss_output <- hicss_output[2:108]
+```
+
+### Figure 1 {-}
+
+Our first figure aims to compare q14 (why did you first enter the world of git) to q15 (how did you learn VCS).
+
+```{r why_how_learn}
+# get only the columns about how people learned + why they learned, omit the NA values
+q1415 <- data.frame(na.omit(hicss_output[c(30, 32:39)]))
+q1415 <- dplyr::filter(q1415, why_vcs != -99)
+
+# pivot the dataframe to get the Method_Learned and count as columns (removing status)
+how_why <- pivot_longer(q1415, cols = 2:9, names_to = "method", values_to = "count")
+how_why <- dplyr::filter(how_why, count == 1)
+
+# convert the count into number column so we can sum
+how_why$count <- as.numeric(how_why$count)
+
+# remove the `how_learned` prefix from methods
+how_why$method <- substr(how_why$method, 11, 40)
+
+# count the counts and then group by the method, so we get the list of methods + counts 
+# + learning methods of how many participants used them
+how_why <- aggregate(how_why$count, by=list(how_why$method, how_why$why_vcs), FUN=sum)
+
+# rename the columns to what we want
+names(how_why) <- c("method", "why", "count")
+
+# export the dataframe for Sarah, who needs the precise counts for the paper writing
+write.csv(how_why, file="results/2020-hicss_figure01.csv")
+
+how_why
+```
+
+Then plot it!
+
+```{r plot_why_how_learn}
+ggplot(how_why, aes(x=method, y=count)) + 
+  geom_bar(aes(fill = why), position = "dodge", stat = "identity", width = 0.6) + 
+  labs(title="Why participants learned Git vs. how they learned", x="Learning Method", 
+       y="\n# Participants") + theme_bw() + 
+  theme(axis.text.x = element_text(vjust=0.5, angle=90)) + 
+  theme(axis.title.y = element_text(angle=0)) +
+  scale_x_discrete( breaks=c("workshop", "webinar", "rtfm", "other", "online_course",
+                             "credit_course", "books","accel"),
+                    labels=c("Workshop","Webinar/online video","RTFM", "Other", 
+                             "Online course", 
+                             "For-credit course", "Books/blogs/articles", 
+                             "Programming accelerator")) +
+  scale_fill_discrete(name="Why Learn Git", 
+                      breaks=c("I heard it would get me a job in the future.",
+                               "I need a version control system.",
+                               "My collaborators use it.", "Other:"), 
+                      labels=c("It'll get me a job", "Needed version control", 
+                               "Collaborators use it", "Other")) + 
+  theme(legend.position="right")
+```
+
+And save the plot:
+
+```{r save_plot_why_how_learn}
+ggsave("results/2020-hicss_figure01.png", dpi = 300)
+```
+
+
+### Figure 2 {-}
+
+The next figure examines the frequency of reteaching themselves Git compared to their self-rated proficiency.
+
+```{r freq_prof}
+# get only the columns about how often they reteach themselves git and their self-rated 
+# proficiency, omit the NA values and -99s and blank cells
+fp <- data.frame(na.omit(output[c(46:47)]))
+freqprof <- dplyr::filter(fp, proficiency != -99)
+freqprof <- dplyr::filter(freqprof, freq_reteach != -99)
+freqprof <- dplyr::filter(freqprof, proficiency != '')
+freqprof <- dplyr::filter(freqprof, freq_reteach != '')
+
+# just get rid of the colon in other
+freqprof$freq_reteach <- str_replace(freqprof$freq_reteach, "Other:", "Other")
+```
+
+Then plot it!
+
+```{r plot_freq_prof}
+ggplot(freqprof, aes(x=freq_reteach)) + 
+  geom_bar(aes(fill = proficiency), position = "dodge", stat = "count", width = 0.6) + 
+  labs(title="Frequency of participants' relearning git and their reported proficiency", 
+       x="\nFrequency", y="# Participants") + theme_bw()  + 
+  theme(axis.text.x = element_text(angle=25, vjust=0.65)) +
+  theme(axis.title.y = element_text(angle=0)) +
+  scale_x_discrete(limits=c('Daily', 'Weekly', 'Once a semester', 'Once a year', 
+                            'Never', 'Other')) +
+  scale_fill_discrete (name="Proficiency", 
+                       breaks=c("1", "2", "3", "4", "5"), 
+                       labels=c("Basic knowledge", "Limited experience", 
+                                "Practical application", "Applied theory",
+                                "Recognized authority"))
+```
+
+And save the plot:
+
+```{r save_plot_freq_prof}
+ggsave("results/2020-hicss_figure02.png", dpi = 300)
+```
+
+I then get a crosstab for Sarah to do counts in paper:
+
+```{r wide_freqprof}
+wide_freqprof <- freqprof %>% 
+  dplyr::count(freq_reteach, proficiency) %>%
+  pivot_wider(names_from = freq_reteach, values_from = n)
+
+# export it for Sarah to do precise counts in paper
+write.csv(wide_freqprof, file="results/2020-hicss_figure02.csv")
+
+wide_freqprof
+```
+
+### Figure 3 {-}
+
+This figure is a simple histogram of the scholarly activities participants engage in on GHPs.
+
+```{r schol_ghps}
+# get only the columns about how people learned + why they learned, omit the NA values
+schol <- data.frame(na.omit(output[c(77:84)]))
+
+# pivot the dataframe to get the Method_Learned and count as columns (removing status)
+schol_act <- pivot_longer(schol, cols = 0:8, names_to = "activity", values_to = "count")
+schol_act <- dplyr::filter(schol_act, count == 1)
+
+# convert the count into number column so we can sum
+schol_act$count <- as.numeric(schol_act$count)
+
+# remove the `how_learned` prefix from methods
+schol_act$activity <- substr(schol_act$activity, 10,35)
+
+# count the counts and then group by the method, so we get the list of methods + counts 
+# + learning methods of how many participants used them
+schol_act <- aggregate(schol_act$count, by=list(schol_act$activity), FUN=sum)
+
+# rename the columns to what we want
+names(schol_act) <- c("activity", "count")
+
+# get sarah the precise counts for paper, put it outside repo because not needed
+write.csv(schol_act, file="results/2020-hicss_figure03.csv")
+
+schol_act
+```
+
+Then plot it!
+
+```{r plot_schol_ghps}
+# plot it with % instead of raw count
+ggplot(schol_act, aes(x=activity, y=count)) + 
+  geom_bar(stat = "identity", width = 0.6) + 
+  labs(title="Scholarly activities participants engaged in on GHPs", 
+       x="Scholarly Activity", y="\n# Participants") + theme_bw() + 
+  theme(axis.text.x = element_text(vjust=0.75, angle=90)) + 
+  theme(axis.title.y = element_text(angle=0)) +
+  scale_x_discrete( breaks=c("collab", "edu", "method", "peer_review", "peerprod",
+                             "pub", "qa","repro"),
+                    labels=c("Collaboration","Education/Teaching","Method Tracking",
+                             "Peer Review", "Peer Production", "Publishing", 
+                             "Quality assurance", "Reproducibility"))
+```
+
+
+And save the plot:
+
+```{r save_plot_schol_ghps}
+ggsave("results/2020-hicss_figure03.png", dpi = 300)
+```
+And we'll snapshot at the end as well to make sure any last dependencies are picked up by `renv`: 
+
+```{r snapshot02}
+renv::snapshot()
+```
+
+## Further Reading
+
+* Introduction to renv: https://rstudio.github.io/renv/articles/renv.html
+* renv: Project Environments for R: https://blog.rstudio.com/2019/11/06/renv-project-environments-for-r/

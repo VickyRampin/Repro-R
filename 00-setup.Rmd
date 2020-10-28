@@ -1,0 +1,8 @@
+# Set Up {-}
+
+1. Download R here: https://cran.r-project.org/. Pick the folder that corresponds to your operating system, then click `Base`, and click the download link on the following page.
+
+2. Download RStudio: https://rstudio.com/products/rstudio/download/#download. Again, pick your operating system and click the corresponding file (e.g. for Windows `RStudio-1.2.5033.exe`, for macOS ` RStudio-1.2.5033.dmg`). Install this like you would any other program on your computer.
+
+3. 
+

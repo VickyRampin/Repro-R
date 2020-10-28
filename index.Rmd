@@ -1,0 +1,63 @@
+--- 
+title: "Reproducibility with R Projects"
+author: "Vicky Steeves"
+date: "2020-10-28"
+description: "Material for a guest lecture for NYU's Data Science for Social Good class"
+site: bookdown::bookdown_site
+colorlinks: yes
+documentclass: book
+always_allow_html: yes
+output:
+  bookdown::gitbook:
+    css: [style.css]
+    config:
+      toc:
+        before: |
+          <p>Reproducibility with R Projects</p>
+          <p>2020-10-28</p>
+          <p>Instructor: <a href="hhttps://library.nyu.edu/people/victoria-steeves/">Vicky Steeves</a></p>
+        after: |
+          <p><a href="https://gitlab.com/RLesur/bookdown-gitlab-pages" target="blank">Published with bookdown &amp; GitLab</a></p>
+          <p>Original content licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA</a>.</p>
+          <p>Any questions, contact: <a href="mailto:vicky.steeves@nyu.edu">vicky.steeves@nyu.edu</a></p>
+      edit: https://gitlab.com/VickySteeves/Repro-R/edit/master/%s
+      search: yes
+      download: ["pdf", "epub"]
+      sharing: null
+  bookdown::pdf_book:
+    latex_engine: pdflatex
+  bookdown::epub_book: default
+---
+
+# Welcome {-}
+
+Thank you all for having me in your class today! This is the rough schedule of what we'll be up to in this session: 
+
+| TIME  | ACTIVITY                       |
+|-------|--------------------------------|
+| 15:30 | Introductions                  |
+| 15:45 | Best practices overview        |
+| 16:45 | BREAK                          |
+| 17:00 | Hands-on practice              |
+| 18:00 | Finish up & overview           |
+
+## Introducing Ourselves {-}
+
+I'm Vicky Steeves,  the Librarian for Research Data Management and Reproducibility here at NYU, and also the subject specialist for data science. My pronouns are she/her/hers or they/them/theirs. My tiny resume:
+
++ BS in Computer Science & Information Technology from Simmons College
++ MLIS from Simmons College
++ National Digital Stewardship Residency, 2014-2015 at the American Museum of Natural History
++ Current position at NYU, 2015 - now
+    - Support students, faculty, staff, and researchers in creating well-managed, high quality, and reproducible research. 
+    - Research centers on integrating reproducible practices into the research workflow, advocating openness in all facets of research, and building/contributing to open infrastructure. 
++ Current MS in Computer Science at Courant
+    
+I have a great passion for community-owned, open source tools and infrastructure for reusable, reproducible, well-documented, and responsible sharing of research. Which is why I'm here to discuss how to mae your work with R reproducible today!
+
+If you need to get a hold of me after this class, there are two main ways:
+
++ Make an appointment if you need a meeting with me: [guides.nyu.edu/appointment](https://guides.nyu.edu/appointment)
++ Email me if you have a question you suspect I could answer over email: [vicky.steeves@nyu.edu](mailto:vicky.steeves@nyu.edu) 
+
+**Now for you all**: give me 1 recommendation of something to try. This can be a movie, book, article, yoga position, album, tabletop RPG game, whatever is school appropriate!

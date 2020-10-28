@@ -1,0 +1,21 @@
+# based on https://rlesur.gitlab.io/bookdown-gitlab-pages
+image: rocker/verse:3.4.3
+
+pages:
+  stage: deploy
+  script:
+    - sudo apt-get update && sudo apt-get -y upgrade --fix-missing  
+    - sudo apt-get -y install bzip2
+    - apt-get -y install wget
+    - apt-get -y install pandoc
+    - apt-get -y install pandoc-citeproc
+    - Rscript -e "install.packages(c('rmarkdown', 'bookdownplus', 'tinytex', 'webshot', 'knitr', 'kableExtra', 'ggpubr', 'tidyverse', 'ggplot2', 'here', 'renv', 'dplyr','plyr'))"
+    - Rscript -e "tinytex::install_tinytex()"
+    - Rscript -e "webshot::install_phantomjs()"
+    - Rscript -e "bookdown::render_book('index.Rmd', 'all', output_dir = 'public')"
+  artifacts:
+    paths:
+    - public
+  only:
+  - main
+  
