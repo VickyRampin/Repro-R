@@ -47,7 +47,7 @@ if(!requireNamespace("renv"))
 library("renv")
 ```
 
-Since you all will be working in R this semester, I am not going to do an R tutorial, but rather show you my real R code and my real RMarkdown work, and how I've made it computationally reproducible with `[renv](https://rstudio.github.io/renv/)`. `renv` is a package that lets you have dependency management at the project level for R. `renv` was also meant to superceded `Packrat`, the package I had been teaching in this class previously, with the promise of fewer surprises and better default behaviors. I like `renv` because it's:
+Since you all will be working in R this semester, I am not going to do an R tutorial, but rather show you my real R code and my real RMarkdown work, and how I've made it computationally reproducible with [renv](https://rstudio.github.io/renv/). `renv` is a package that lets you have dependency management at the project level for R. `renv` was also meant to superceded `Packrat`, the package I had been teaching in this class previously, with the promise of fewer surprises and better default behaviors. I like `renv` because it's:
 
 + *Isolated*: Each project gets its own library of R packages, so you can feel free to upgrade and change package versions in one project without worrying about breaking your other projects.
 + *Portable*: Because `renv` writes your dependency information to the `lockfile`, you can easily share and collaborate on projects with others, and ensure that everyone is working from the same environment.
@@ -65,14 +65,14 @@ It's also great for collaborating. You can send people your `renv.lock` lockfile
 
 And so on and so on as much! You may at some point need to call `renv::restore()` to revert to the previous state if updated packages break your code, which is sadly very likely to happen. **Let's initialize `renv` for this project now**. 
 
-```{r renv_init, results='hide'}
+```{r renv_init, echo=T, results='hide', message=F, warning=F}
 renv::consent(provided = TRUE)
 renv::init(force=TRUE, restart = FALSE)
 ```
 
 You may need to enter "Y" in the Console on the bottom left pane of RStudio if this is your first time using `renv`. Ok, now that we have `renv` initialized for our project, let's get to work visualizing my survey data. We'll be downloading a CSV off the Internet and writing it to our `data` folder, since this will be raw data we transform, as well as another RMarkdown document that does some processing on this raw data and saving that to our `src` folder:
 
-```{r download_deps, results='hide'}
+```{r download_deps, echo=T, results='hide', message=F, warning=F}
 # download raw data
 download.file("https://osf.io/8vswu/download",
               "data/survey.csv", mode = "wb")
@@ -87,8 +87,7 @@ knitr::purl("src/processing.Rmd", output = 'src/processing.R')
 
 Now that we have our raw data and our processing script downloaded off the Net and into their rightful folders, let's call that data processing script from our RMarkdown document so we can start plotting: 
 
-```{r process_data, results='hide'}
-source("src/processing.R", local = knitr::knit_global())
+```{r process_data, echo=T, results='hide', message=F, warning=F}
 source("src/processing.R", local = knitr::knit_global())
 ```
 
@@ -288,7 +287,7 @@ renv::snapshot(prompt = FALSE)
 
 And that's it! Now if you send each other your R Projects with all the files and the `renv` lockfile, they will be able to reproduce your work :) Let's try that in small groups now!
 
-### Swapping Work
+### Swapping Work {-}
 
 I will put you into breakout groups where **one** person should share their project files, including their `renv.lock` file. You can zip it up and send it via email even, if that's easiest.
 
